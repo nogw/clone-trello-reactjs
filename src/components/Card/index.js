@@ -1,28 +1,36 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useContext } from 'react';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import AddIcon from '@material-ui/icons/Add';
 import { Container, Header, Add, Content, AddNewCard } from './styles';
 import ClearIcon from '@material-ui/icons/Clear';
 import db from '../../firebase'
 import firebase from 'firebase';
+import { Context } from '../../ContextProvider';
 
 function Card({ name, id }) {
   const [cardContent, setCardContent] = useState('')
   const [isEdditing, setIsEdditing] = useState(true);
   const [cards, setCards] = useState([])
+  const [user, setUser] = useContext(Context);
   const textareaRef = useRef()
 
   useEffect(() => {
     if (id) {
-      db.collection('boards').doc(id).collection('cards').orderBy("timestamp","asc").onSnapshot(snapshot => {
-        setCards(snapshot.docs.map(doc => doc.data()))
+      db.collection("accounts").doc(user.uid).collection("boards").doc(id).collection('cards').orderBy("timestamp","asc").onSnapshot(snapshot => {
+        setCards(snapshot.docs.map(doc => (
+          {
+            id: doc.id,
+            data: doc.data()
+          }      
+        )
+       ))
       })
     }
   }, [id])
 
   const handleAddCard = () => {
     if ( cardContent.length > 0 ) {
-      db.collection("boards").doc(id).collection('cards').add({
+      db.collection("accounts").doc(user.uid).collection("boards").doc(id).collection('cards').add({
         cardItem: cardContent,
         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
       })
@@ -50,8 +58,8 @@ function Card({ name, id }) {
       </Header>
       {
         cards.map(item =>
-          <Content id={item.id}>
-            {item.cardItem}
+          <Content key={item.id} id={item.id}>
+            {item.data.cardItem}
           </Content>  
         )
       }

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Container, LoginContainer, Form, Button } from './styles';
 import { CSSTransition } from 'react-transition-group';
-import { auth } from '../../firebase'
+import db, { auth } from '../../firebase'
 import { SettingsBluetoothSharp } from '@material-ui/icons';
 import { Context } from '../../ContextProvider';
 
@@ -40,9 +40,18 @@ function LoginMenu() {
   }  
 
   const handleRegister = () => {
-    if (inputs.passwordToReg === inputs.password2ToReg) {
+    if (inputs.passwordRegister === inputs.passwordRegister) {
       auth
-        .createUserWithEmailAndPassword(inputs.emailToReg, inputs.passwordToReg)
+        .createUserWithEmailAndPassword(inputs.emailRegister, inputs.passwordRegister)
+        .then((user) => {
+          const userUid = user.user.uid;
+          console.log(userUid);
+
+          db.collection('accounts').doc(userUid).set({
+            userId: userUid
+          })
+        })
+        
         .catch((err) => {
           console.log(err)
         }
@@ -71,7 +80,7 @@ function LoginMenu() {
 
   const handleSubmit2Register = (e) => {
     e.preventDefault()
-    handleLogin()
+    handleRegister()
   }
 
   return (
@@ -102,7 +111,7 @@ function LoginMenu() {
         <LoginContainer>
           <p>Register in Trello</p>
             <Form onSubmit={handleSubmit2Register}>
-            <input onChange={handleChange} name="emailRegister" placeholder='Enter email' value={inputs.emailRegister} />
+              <input onChange={handleChange} name="emailRegister" placeholder='Enter email' value={inputs.emailRegister} />
               <input onChange={handleChange} name="passwordRegister" placeholder='Enter password' value={inputs.passwordRegister} />
               <input onChange={handleChange} name="password2Register" placeholder='Confirm password' value={inputs.password2Register} />
               <button>Register</button>

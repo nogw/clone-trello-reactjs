@@ -1,36 +1,40 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import Card from '../Card';
 import { Container, AddNewList, AddNewListActive, Cards, Wrapper, CardsContainer, CardToAdd } from './styles';
 import AddIcon from '@material-ui/icons/Add';
 import ClearIcon from '@material-ui/icons/Clear';
 import { CSSTransition } from 'react-transition-group';
 import db from '../../firebase'
+import { Context } from '../../ContextProvider';
 
 function CardContainer() {
   const [MenuNow, setMenuNow] = useState('main')
   const [isActive, setIsActive] = useState(false)
   const [listName, setListName] = useState('')
   const [list, setList] = useState([])
+  const [user, setUser] = useContext(Context);
 
   useEffect(() => {
-    const getBoard = db.collection("boards").onSnapshot(snapshot => (
-      setList(snapshot.docs.map(doc => (
-        {
-          id: doc.id,
-          data: doc.data()
-        }      
-      )
-      ))
-    ));
-
-    return () => {
-      getBoard();
-    }
-  }, [])
+    if (user.uid) {
+      db.collection("accounts")
+      .doc(user.uid)
+      .collection("boards")
+      .onSnapshot(snapshot => {
+        console.log(snapshot.docs)
+        setList(snapshot.docs.map(doc => (
+          {
+            id: doc.id,
+            data: doc.data()
+          }      
+        )
+       ))
+    });
+  }
+  }, [user.uid])
 
   const handleNewList = () => {
     if ( listName.length > 0 ) {
-      db.collection("boards").add({
+      db.collection("accounts").doc(user.uid).collection("boards").add({
         boardName: listName
       })
 
@@ -44,7 +48,7 @@ function CardContainer() {
         <Cards>
           {
             list.map(item => 
-              <Wrapper>
+              <Wrapper key={item.data.boardName}>
                 <Card name={item.data.boardName} id={item.id}/>  
               </Wrapper>
             )
