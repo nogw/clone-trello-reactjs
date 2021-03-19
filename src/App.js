@@ -1,26 +1,24 @@
-import React from 'react';
-import CardContainer from './components/CardsContainer';
-import Navbar from './components/Navbar';
+import React, { useContext } from 'react';
 import Cards from './pages/Cards';
 import GlobalStyle from './styles';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
-import Login from './pages/Login';
+import LoginMenu from './components/LoginMenu';
+import { Context } from './ContextProvider'
 
 function App() {
-  return (
-    <Router>
-      <Switch>
-        <Route path="/b">
-          <Cards />
-        </Route>
+  const [user, setUser] = useContext(Context);
 
-        <Route path="/">
-          <Login />  
-        </Route>
-      </Switch>
-      <GlobalStyle />
-    </Router>
-  );
+  return (
+    <>
+      {
+        user ? (
+          <Cards />
+        ) : (
+          <LoginMenu />
+        )
+      } 
+      <GlobalStyle/>
+    </>
+  )
 }
 
 export default App;

@@ -10,11 +10,16 @@ import NotificationsNoneIcon from '@material-ui/icons/NotificationsNone';
 import Avatar from '@material-ui/core/Avatar';
 
 import { Container, IconButton, Title } from './styles';
+import { auth } from '../../firebase'
 
 function Navbar() {
+  const handleLogout = () => {
+    auth.signOut()
+  }
+
   return (
     <Container>
-      <IconButton>
+      <IconButton onClick={() => handleLogout()}>
         <AppsIcon/>
       </IconButton>
 

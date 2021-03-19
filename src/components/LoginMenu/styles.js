@@ -72,48 +72,47 @@ export const LoginContainer = styled.div`
     font-weight: bold;
     font-size: 16px;
   }
+`;
 
-  form {
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    margin-top: 14px;
+export const Form = styled.form`
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  margin-top: 14px;
 
-    input {
-      border: 2px solid #dfe1e6;
-      padding: 8px;
-      border-radius: 2px;
-      margin: 5px;
-      width: 100%;
-      transition: all 300ms ease;
+  input {
+    border: 2px solid #dfe1e6;
+    padding: 8px;
+    border-radius: 2px;
+    margin: 5px;
+    width: 100%;
+    transition: all 300ms ease;
 
-      &:focus {
-        border: 2px solid #0079bf;
-      }
-
-      &::placeholder {
-        font-size: 14px;
-      }
+    &:focus {
+      border: 2px solid #0079bf;
     }
 
-    button {
-      background-color: #0079bf;
-      border-radius: 2px;
-      width: 100%;
-      color: #fff;
-      padding: 6px;
-      margin: 5px;
-      padding: 8px;
+    &::placeholder {
       font-size: 14px;
-      font-weight: bold;
-      border: none;
-      cursor: pointer;
-      transition: all 200ms ease; 
-
-      &:hover {
-        filter: brightness(0.9);
-      }
     }
+  }
 
+  button {
+    background-color: #0079bf;
+    border-radius: 2px;
+    width: 100%;
+    color: #fff;
+    padding: 6px;
+    margin: 5px;
+    padding: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    transition: all 200ms ease; 
+
+    &:hover {
+      filter: brightness(0.9);
+    }
   }
 `;

@@ -1,20 +1,34 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import AddIcon from '@material-ui/icons/Add';
 import { Container, Header, Add, Content, AddNewCard } from './styles';
 import ClearIcon from '@material-ui/icons/Clear';
+import db from '../../firebase'
+import firebase from 'firebase';
 
-function Card({ name }) {
+function Card({ name, id }) {
   const [cardContent, setCardContent] = useState('')
   const [isEdditing, setIsEdditing] = useState(true);
-  const [card, setCard] = useState([])
-
+  const [cards, setCards] = useState([])
   const textareaRef = useRef()
 
+  useEffect(() => {
+    if (id) {
+      db.collection('boards').doc(id).collection('cards').orderBy("timestamp","asc").onSnapshot(snapshot => {
+        setCards(snapshot.docs.map(doc => doc.data()))
+      })
+    }
+  }, [id])
+
   const handleAddCard = () => {
-    let value = cardContent
-    value.trim().length > 0 && setCard([...card, {card: cardContent}])
-    setCardContent("")
+    if ( cardContent.length > 0 ) {
+      db.collection("boards").doc(id).collection('cards').add({
+        cardItem: cardContent,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+      })
+
+      setCardContent("") 
+    }
   }
 
   const onEnterPress = e => {
@@ -35,9 +49,9 @@ function Card({ name }) {
         </div>
       </Header>
       {
-        card.map(item =>
-          <Content>
-            {item.card}
+        cards.map(item =>
+          <Content id={item.id}>
+            {item.cardItem}
           </Content>  
         )
       }
