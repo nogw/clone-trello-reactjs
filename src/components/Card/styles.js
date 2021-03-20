@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 export const Container = styled.div`
   background-color: #ebecf0;
@@ -6,6 +6,10 @@ export const Container = styled.div`
   margin: 4px;
   height: 100%;
   width: 100%;
+`;
+
+export const CardsContainer = styled.div`
+
 `;
 
 export const Header = styled.div`

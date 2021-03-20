@@ -1,11 +1,12 @@
 import React, { useState, useRef, useEffect, useContext } from 'react';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import AddIcon from '@material-ui/icons/Add';
-import { Container, Header, Add, Content, AddNewCard } from './styles';
+import { Container, Header, Add, Content, AddNewCard, CardsContainer } from './styles';
 import ClearIcon from '@material-ui/icons/Clear';
 import db from '../../firebase'
 import firebase from 'firebase';
 import { Context } from '../../ContextProvider';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 function Card({ name, id }) {
   const [cardContent, setCardContent] = useState('')
@@ -48,38 +49,64 @@ function Card({ name, id }) {
     }
   }
 
-  return (
-    <Container>
-      <Header>
-        <h1>{name}</h1>
-        <div className="icon">
-          <MoreHorizIcon />
-        </div>
-      </Header>
-      {
-        cards.map(item =>
-          <Content key={item.id} id={item.id}>
-            {item.data.cardItem}
-          </Content>  
-        )
-      }
+  const handleOnDragEnd = (result) => {
+    if (!result.destination) return;
 
-      {
-        isEdditing ? (
-          <Add onClick={() => setIsEdditing(!isEdditing)}>
-            <h1><AddIcon/> Add a card</h1>
-          </Add>
-        ) : (
-          <AddNewCard>
-            <textarea onKeyPress={e => onEnterPress(e)} value={cardContent} cols="10" ref={textareaRef} onChange={e => setCardContent(e.target.value)} spellCheck="false" placeholder="Enter a title for this card..."/>
-            <div className="buttons">
-              <button onClick={() => handleAddCard()}>Add Card</button>
-              <ClearIcon onClick={() => setIsEdditing(!isEdditing)}/>
-            </div>
-          </AddNewCard>
-        )
-      }
-    </Container>
+    const items = Array.from(cards);
+    const [reorderedItem] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reorderedItem);
+
+    setCards(items);
+  }
+
+  return (
+    <DragDropContext onDragEnd={e => handleOnDragEnd(e)}>
+      <Container>
+        <Header>
+          <h1>{name}</h1>
+          <div className="icon">
+            <MoreHorizIcon />
+          </div>
+        </Header>
+
+        {
+          cards.map((item, index) =>
+            <Draggable 
+              key={item.id}
+              draggableId={item.id} 
+              index={index}
+            >
+              {(provided) => {
+                <Content 
+                  id={item.id}
+                  ref={provided.innerRef} 
+                  {...provided.draggableProps} 
+                  {...provided.dragHandleProps}
+                >
+                  {item.data.cardItem}
+                </Content>
+                {provided.placeholder}
+            }}
+            </Draggable>
+          )
+        }
+        {
+          isEdditing ? (
+            <Add onClick={() => setIsEdditing(!isEdditing)}>
+              <h1><AddIcon/> Add a card</h1>
+            </Add>
+          ) : (
+            <AddNewCard>
+              <textarea onKeyPress={e => onEnterPress(e)} value={cardContent} cols="10" ref={textareaRef} onChange={e => setCardContent(e.target.value)} spellCheck="false" placeholder="Enter a title for this card..."/>
+              <div className="buttons">
+                <button onClick={() => handleAddCard()}>Add Card</button>
+                <ClearIcon onClick={() => setIsEdditing(!isEdditing)}/>
+              </div>
+            </AddNewCard>
+          )
+        }
+      </Container>
+    </DragDropContext>
   );
 }
 
