@@ -43,39 +43,22 @@ function CardContainer() {
     }
   }
 
-  const onDragStart = tmp => {};
-
-  const onDragEnd = result => {
-    if (!result.destination) return;
-
-    const items = Array.from(list);
-    const [reorderedItem] = items.splice(result.source.index, 1);
-    items.splice(result.destination.index, 0, reorderedItem);
-
-    setList(items);
-  };
-
   return (
-    <DragDropContext
-      onDragStart={onDragStart}
-      onDragEnd={onDragEnd}
-    >
+    
       <Container>
         <CardsContainer>
-          <Droppable droppableId="board" type="COLUMN" direction="horizontal">
-            {provided => (
-              <Cards ref={provided.innerRef} {...provided.droppableProps}>
-                {
-                  list.map(item => 
-                    <Wrapper key={item.data.boardName}>
-                      <Card name={item.data.boardName} id={item.id}/>  
-                    </Wrapper>
-                  )
-                }
-              </Cards>
-            )}
-          </Droppable>
-        </CardsContainer>
+                <Cards>
+                  {
+                    list.map(item =>
+                      <Wrapper 
+                        key={item.id}
+                      >
+                        <Card name={item.data.boardName} id={item.id}/>  
+                      </Wrapper>
+                    )
+                  }
+                </Cards>
+          </CardsContainer>
         <CardToAdd>
                 <CSSTransition 
                   in={MenuNow === 'main'}
@@ -106,7 +89,6 @@ function CardContainer() {
                 </CSSTransition>
         </CardToAdd>
       </Container>
-    </DragDropContext>
   );
 }
 

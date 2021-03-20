@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import AppsIcon from '@material-ui/icons/Apps';
 import HomeIcon from '@material-ui/icons/Home';
 import DashboardIcon from '@material-ui/icons/Dashboard';
@@ -9,10 +9,18 @@ import InfoIcon from '@material-ui/icons/Info';
 import NotificationsNoneIcon from '@material-ui/icons/NotificationsNone';
 import Avatar from '@material-ui/core/Avatar';
 
+import { Context } from '../../ContextProvider';
 import { Container, IconButton, Title } from './styles';
 import { auth } from '../../firebase'
 
 function Navbar() {
+  const [user, setUser] = useContext(Context);
+  const userName = user.email.substring(0, 2)
+
+  useEffect(() => {
+    console.log(user)
+  }, []) 
+
   const handleLogout = () => {
     auth.signOut()
   }
@@ -51,7 +59,7 @@ function Navbar() {
         <NotificationsNoneIcon/>
       </IconButton>
       
-      <Avatar className="Avatar">GA</Avatar>
+      <Avatar className="Avatar">{userName}</Avatar>
     </Container>
   );
 }

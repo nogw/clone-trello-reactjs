@@ -8,7 +8,7 @@ export const Container = styled.div`
   width: 100%;
 `;
 
-export const CardsContainer = styled.div`
+export const ContentContainer = styled.div`
 
 `;
 

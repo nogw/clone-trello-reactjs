@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useContext } from 'react';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import AddIcon from '@material-ui/icons/Add';
-import { Container, Header, Add, Content, AddNewCard, CardsContainer } from './styles';
+import { Container, Header, Add, Content, AddNewCard, ContentContainer } from './styles';
 import ClearIcon from '@material-ui/icons/Clear';
 import db from '../../firebase'
 import firebase from 'firebase';
@@ -50,6 +50,7 @@ function Card({ name, id }) {
   }
 
   const handleOnDragEnd = (result) => {
+
     if (!result.destination) return;
 
     const items = Array.from(cards);
@@ -68,28 +69,26 @@ function Card({ name, id }) {
             <MoreHorizIcon />
           </div>
         </Header>
-
-        {
-          cards.map((item, index) =>
-            <Draggable 
-              key={item.id}
-              draggableId={item.id} 
-              index={index}
-            >
-              {(provided) => {
-                <Content 
-                  id={item.id}
-                  ref={provided.innerRef} 
-                  {...provided.draggableProps} 
-                  {...provided.dragHandleProps}
-                >
-                  {item.data.cardItem}
-                </Content>
+        
+        <Droppable droppableId={`draggable-${id}`}>
+            {(provided) => (
+              <div ref={provided.innerRef}>
+                {
+                  cards.map((item, index) => (
+                    <Draggable key={item.id} draggableId={item.id} index={index} >
+                      {(provided, snapshot) => (
+                        <Content ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}> 
+                          {item.data.cardItem}
+                        </Content>
+                      )}
+                    </Draggable>
+                  ))
+                }
                 {provided.placeholder}
-            }}
-            </Draggable>
-          )
-        }
+              </div>
+            )}
+          </Droppable>
+
         {
           isEdditing ? (
             <Add onClick={() => setIsEdditing(!isEdditing)}>
