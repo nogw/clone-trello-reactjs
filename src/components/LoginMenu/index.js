@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Container, LoginContainer, Form, Button } from './styles';
+import { Container, LoginContainer, Form } from './styles';
 import { CSSTransition } from 'react-transition-group';
 import db, { auth } from '../../firebase'
-import { SettingsBluetoothSharp } from '@material-ui/icons';
 import { Context } from '../../ContextProvider';
 
 function LoginMenu() {
@@ -111,8 +110,8 @@ function LoginMenu() {
           <p>Register in Trello</p>
             <Form onSubmit={handleSubmit2Register}>
               <input onChange={handleChange} name="emailRegister" placeholder='Enter email' value={inputs.emailRegister} />
-              <input onChange={handleChange} name="passwordRegister" placeholder='Enter password' value={inputs.passwordRegister} />
-              <input onChange={handleChange} name="password2Register" placeholder='Confirm password' value={inputs.password2Register} />
+              <input onChange={handleChange} type="password" name="passwordRegister" placeholder='Enter password' value={inputs.passwordRegister} />
+              <input onChange={handleChange} type="password" name="password2Register" placeholder='Confirm password' value={inputs.password2Register} />
               <button>Register</button>
             </Form>
           <a onClick={() => setMenuNow('login')}>Already have an account? Log In</a>

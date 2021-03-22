@@ -6,11 +6,9 @@ import ClearIcon from '@material-ui/icons/Clear';
 import { CSSTransition } from 'react-transition-group';
 import db from '../../firebase'
 import { Context } from '../../ContextProvider';
-import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 
 function CardContainer() {
   const [MenuNow, setMenuNow] = useState('main')
-  const [isActive, setIsActive] = useState(false)
   const [listName, setListName] = useState('')
   const [list, setList] = useState([])
   const [user, setUser] = useContext(Context);
@@ -44,7 +42,6 @@ function CardContainer() {
   }
 
   return (
-    
       <Container>
         <CardsContainer>
                 <Cards>

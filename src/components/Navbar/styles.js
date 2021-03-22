@@ -11,6 +11,7 @@ export const Container = styled.div`
   height: 40px;
   align-items: center;
   padding: 0px 2px;
+  justify-content: center;
 
   .Avatar {
     height: 34px;
@@ -62,5 +63,9 @@ export const Title = styled.div`
 
   h1 {
     font-size: 21px;
+  }
+
+  @media screen and (max-width: 485px) {
+    display: none;
   }
 `;

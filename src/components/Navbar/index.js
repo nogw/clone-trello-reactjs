@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import AppsIcon from '@material-ui/icons/Apps';
 import HomeIcon from '@material-ui/icons/Home';
 import DashboardIcon from '@material-ui/icons/Dashboard';
@@ -15,7 +15,12 @@ import { auth } from '../../firebase'
 
 function Navbar() {
   const [user, setUser] = useContext(Context);
-  const userName = user.email.substring(0, 2)
+  const [name, setName] = useState("")
+
+  useEffect(() => {
+    user.email ? setName(user.email.substring(0, 2)) : setName("")
+  }, [user])
+
 
   const handleLogout = () => {
     auth.signOut()
@@ -55,7 +60,7 @@ function Navbar() {
         <NotificationsNoneIcon/>
       </IconButton>
       
-      <Avatar className="Avatar">{userName}</Avatar>
+      <Avatar className="Avatar">{name}</Avatar>
     </Container>
   );
 }

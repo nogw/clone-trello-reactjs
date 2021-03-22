@@ -1,11 +1,13 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
-  margin-top: 45px;
   padding: 0px 6px;
   display: flex;
-  height: 100%;
-  
+
+  @media screen and (max-width: 485px) {
+    flex-direction: column;
+  }
+
   .menu {
     width: 100%;
   }
@@ -62,10 +64,21 @@ export const Content = styled.div`
 
 export const CardsContainer = styled.div`
   position: relative;
+  
+    @media screen and (max-width: 485px) {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
 `;
 
 export const Cards = styled.div`
   display: flex;
+
+  @media screen and (max-width: 485px) {
+    flex-direction: column;
+  }
 `;
 
 export const Wrapper = styled.div`
@@ -99,11 +112,16 @@ export const AddNewListActive = styled.div`
   background-color: #ebecf0;
   border-radius: 4px;
   margin: 4px 8px 4px 4px;
+  padding: 6px;
   padding: 5px;
   width: 272px;
   display: flex;
   flex-direction: column;
   flex-shrink:0;
+
+  @media screen and (max-width: 485px) {
+    width: 264px;
+  }
 
   input {
     width: 100%;
@@ -143,4 +161,13 @@ export const AddNewListActive = styled.div`
 export const CardToAdd = styled.div`
   display: flex;
   height: 100%;
+  
+  @media screen and (max-width: 485px) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    position: relative;
+    left: 2px;
+  }
 `

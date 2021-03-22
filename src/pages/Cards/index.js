@@ -6,6 +6,7 @@ function cards() {
   return (
     <>
       <Navbar />
+      <div style={{minHeight:"50px"}}/>
       <CardContainer/>
     </>
   );

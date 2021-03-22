@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect, useContext } from 'react';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
+import DeleteIcon from '@material-ui/icons/Delete';
 import AddIcon from '@material-ui/icons/Add';
 import { Container, Header, Add, Content, AddNewCard, ContentContainer } from './styles';
 import ClearIcon from '@material-ui/icons/Clear';
@@ -7,15 +8,20 @@ import db from '../../firebase'
 import firebase from 'firebase';
 import { Context } from '../../ContextProvider';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import Task from '../Task';
-
 
 function Card({ name, id }) {
   const [cardContent, setCardContent] = useState('')
   const [isEdditing, setIsEdditing] = useState(true);
+  const [isActive, setIsActive] = useState(true);
   const [cards, setCards] = useState([])
   const [user, setUser] = useContext(Context);
   const textareaRef = useRef()
+
+  const autoResize = e => {
+    textareaRef.current.style.height = `auto`;
+    textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+    setCardContent(e.target.value)
+  }
 
   useEffect(() => {
     if (id) {
@@ -47,6 +53,7 @@ function Card({ name, id }) {
     if (e.code === 'Enter') {
       e.preventDefault();
       handleAddCard()
+      textareaRef.current.style.height = `auto`;
       return false;
     }
   }
@@ -62,22 +69,51 @@ function Card({ name, id }) {
     setCards(items);
   }
 
+  const removeItem = (idRemove) => {
+    db.collection("accounts").doc(user.uid).collection("boards").doc(id).collection('cards').doc(idRemove).delete();
+  }
+
+  const removeCard = (idRemove2) => {
+    db.collection("accounts").doc(user.uid).collection("boards").doc(idRemove2).delete();
+    setIsActive(!isActive)
+  }
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setIsActive(true)
+    }, 3000)
+    return () => clearTimeout(timeout)
+  }, [isActive])
+
   return (
     <DragDropContext onDragEnd={e => handleOnDragEnd(e)}>
       <Container>
         <Header>
           <h1>{name}</h1>
           <div className="icon">
-            <MoreHorizIcon />
+            {
+              isActive ? (
+                <MoreHorizIcon onClick={() => setIsActive(!isActive)}/>
+              ) : (
+                <DeleteIcon className="trash" onClick={() => removeCard(id)}/>
+              )
+            }
           </div>
         </Header>
         
-        <Droppable droppableId="all-columns" type="TASK">
+        <Droppable droppableId={`draggable-${id}`}>
             {(provided) => (
-              <div ref={provided.innerRef} {...provided.droppableProps}>
+              <div className="listCards" ref={provided.innerRef}>
                 {
                   cards.map((item, index) => (
-                    <Task item={item} index={index}/>
+                    <Draggable key={item.id} draggableId={item.id} index={index} >
+                      {(provided, snapshot) => (
+                        <Content ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}> 
+                          {item.data.cardItem}
+                          <DeleteIcon className="trash" onClick={() => removeItem(item.id)}/>
+                        </Content>
+                      )}
+                    </Draggable>
                   ))
                 }
                 {provided.placeholder}
@@ -92,7 +128,7 @@ function Card({ name, id }) {
             </Add>
           ) : (
             <AddNewCard>
-              <textarea onKeyPress={e => onEnterPress(e)} value={cardContent} cols="10" ref={textareaRef} onChange={e => setCardContent(e.target.value)} spellCheck="false" placeholder="Enter a title for this card..."/>
+              <textarea onKeyPress={e => onEnterPress(e)} value={cardContent} cols="10" ref={textareaRef} maxLength="255" onChange={e => autoResize(e)} spellCheck="false" placeholder="Enter a title for this card..."/>
               <div className="buttons">
                 <button onClick={() => handleAddCard()}>Add Card</button>
                 <ClearIcon onClick={() => setIsEdditing(!isEdditing)}/>

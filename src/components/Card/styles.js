@@ -1,11 +1,21 @@
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 
 export const Container = styled.div`
   background-color: #ebecf0;
   border-radius: 4px;
-  margin: 4px;
+  margin: 0px 4px;
   height: 100%;
-  width: 100%;
+  width: 95%;
+  flex: 1;
+
+  .listCards {
+    overflow-y: auto;
+    max-height: 400px;
+  }
+
+  @media screen and (max-width: 485px) {
+    margin: 4px;
+  }
 `;
 
 export const ContentContainer = styled.div`
@@ -35,6 +45,7 @@ export const Header = styled.div`
     align-items: center;
     justify-content: center;
     border-radius: 4px;
+    cursor: pointer;
     min-height: 34px;
     min-width: 34px;
 
@@ -58,6 +69,24 @@ export const Content = styled.div`
   color: #172b4d;
   overflow-wrap: break-word;
   font-size: 14px;
+  position: relative;
+
+  .trash {
+    position: absolute;
+    opacity: 0;
+    right: 8px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: 200ms ease all;
+
+    &:hover {
+      color: #ff7262;
+    }
+  }
+
+  &:hover > .trash {
+    opacity: 1;
+  }
 
   &:hover {
     background-color: #f1f1f1;
