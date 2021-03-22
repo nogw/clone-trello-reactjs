@@ -17,10 +17,6 @@ function Navbar() {
   const [user, setUser] = useContext(Context);
   const userName = user.email.substring(0, 2)
 
-  useEffect(() => {
-    console.log(user)
-  }, []) 
-
   const handleLogout = () => {
     auth.signOut()
   }

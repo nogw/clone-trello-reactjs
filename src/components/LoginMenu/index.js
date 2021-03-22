@@ -45,7 +45,6 @@ function LoginMenu() {
         .createUserWithEmailAndPassword(inputs.emailRegister, inputs.passwordRegister)
         .then((user) => {
           const userUid = user.user.uid;
-          console.log(userUid);
 
           db.collection('accounts').doc(userUid).set({
             userId: userUid

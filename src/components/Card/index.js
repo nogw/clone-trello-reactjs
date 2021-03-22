@@ -7,6 +7,8 @@ import db from '../../firebase'
 import firebase from 'firebase';
 import { Context } from '../../ContextProvider';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import Task from '../Task';
+
 
 function Card({ name, id }) {
   const [cardContent, setCardContent] = useState('')
@@ -70,18 +72,12 @@ function Card({ name, id }) {
           </div>
         </Header>
         
-        <Droppable droppableId={`draggable-${id}`}>
+        <Droppable droppableId="all-columns" type="TASK">
             {(provided) => (
-              <div ref={provided.innerRef}>
+              <div ref={provided.innerRef} {...provided.droppableProps}>
                 {
                   cards.map((item, index) => (
-                    <Draggable key={item.id} draggableId={item.id} index={index} >
-                      {(provided, snapshot) => (
-                        <Content ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}> 
-                          {item.data.cardItem}
-                        </Content>
-                      )}
-                    </Draggable>
+                    <Task item={item} index={index}/>
                   ))
                 }
                 {provided.placeholder}
